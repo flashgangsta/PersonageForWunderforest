@@ -2,21 +2,22 @@
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
+	import flash.events.Event;
 	
 	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
-	 * @version 0.07 06/08/2014
+	 * @version 0.09 23/10/2014
 	 */
 	
 	public class MovieClipUtil {
 		
 		/**
-		 * 
+		 *
 		 */
 		
 		public function MovieClipUtil() {
-			
+		
 		}
 		
 		/**
@@ -30,6 +31,7 @@
 			var numChildren:int = target.numChildren;
 			var child:DisplayObject;
 			var movieClip:MovieClip;
+			
 			for (var i:int = 0; i < numChildren; i++) {
 				child = target.getChildAt(i);
 				if (child is MovieClip) {
@@ -44,6 +46,11 @@
 				if (child is DisplayObjectContainer) {
 					MovieClipUtil.stopAllMovieClips(child as DisplayObjectContainer, stopOnCurrenFrame, stopOnFrame);
 				}
+			}
+			
+			if (target is MovieClip) {
+				movieClip = target as MovieClip;
+				movieClip.gotoAndStop(stopOnFrame ? stopOnFrame : movieClip.currentFrame);
 			}
 		}
 		
@@ -61,21 +68,40 @@
 			
 			for (var i:int = 0; i < numChildren; i++) {
 				child = target.getChildAt(i);
-				if (child is MovieClip) {
-					movieClip = child as MovieClip;
-					if (playFromCurrentFrame) {
-						movieClip.play();
-					} else {
-						movieClip.gotoAndPlay(playFromFrame);
-					}
+				if (child is DisplayObjectContainer) {
+					MovieClipUtil.playAllMovieClips(child as DisplayObjectContainer, playFromCurrentFrame, playFromFrame);
 				}
+				
 			}
 			
-			if (child is DisplayObjectContainer) {
-				MovieClipUtil.playAllMovieClips(child as DisplayObjectContainer, playFromCurrentFrame, playFromFrame);
+			if (target is MovieClip) {
+				movieClip = target as MovieClip;
+				movieClip.gotoAndPlay(playFromCurrentFrame ? playFromCurrentFrame : movieClip.currentFrame);
 			}
+		
 		}
 		
+		/**
+		 *
+		 */
+		
+		static public function playClipBack(movieClip:MovieClip):void {
+			movieClip.addEventListener(Event.ENTER_FRAME, goToLastFrame);
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
+		
+		static private function goToLastFrame(event:Event):void {
+			var movieClip:MovieClip = event.target as MovieClip;
+			MovieClipUtil.stopAllMovieClips(movieClip, false, movieClip.currentFrame - 1);
+			if (movieClip.currentFrame === 1) {
+				movieClip.removeEventListener(Event.ENTER_FRAME, goToLastFrame);
+			}
+		}
+	
 	}
 
 }

@@ -1,7 +1,9 @@
 package com.rr.personage {
 	import com.flashgangsta.utils.MovieClipUtil;
+	import com.flashgangsta.utils.Queue;
 	import com.rr.Dispatcher;
 	import com.rr.personage.events.DynamicPartEvent;
+	import com.rr.personage.events.PersonageActionEvent;
 	import flash.display.BlendMode;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
@@ -25,6 +27,7 @@ package com.rr.personage {
 		private var strokeColorPartColorTransform:ColorTransform = new ColorTransform();
 		private var currentAction:MovieClip;
 		private var neededActionName:String;
+		private var actionsQueue:Queue = new Queue();
 		
 		public function PersonageView(model:PersonageModel) {
 			super();
@@ -50,11 +53,25 @@ package com.rr.personage {
 				return;
 			}
 			
-			trace(currentAction);
 			if (currentAction) {
-				MovieClipUtil.stopAllMovieClips(currentAction);
+				if (currentAction !== instance.getActionInstance(PersonageActions.DEFAULT) && actionName !== PersonageActions.DEFAULT) {
+					trace("add action to queue and break", currentAction);
+					actionsQueue.push(showAction, actionName);
+					return;
+				}
+				
+				trace("remove action", currentAction);
+				
+				currentAction.addFrameScript(0, null);
+				currentAction.addFrameScript(currentAction.totalFrames - 1, null);
+				MovieClipUtil.stopAllMovieClips(currentAction, false, 1);
+				removeChild(currentAction);
+				currentAction = null;
 			}
+			
 			currentAction = instance.getActionInstance(actionName);
+			
+			trace("start new action", currentAction);
 			
 			if(actionName !== PersonageActions.DEFAULT) {
 				currentAction.addFrameScript(currentAction.totalFrames - 1, onActionLastFrame);
@@ -69,7 +86,60 @@ package com.rr.personage {
 		 */
 		
 		private function onActionLastFrame():void {
+			trace("last frame of action", currentAction);
+			
+			switch(currentAction) {
+				case instance.getActionInstance(PersonageActions.STROKING_BELLY):
+				case instance.getActionInstance(PersonageActions.SHAKING):
+				case instance.getActionInstance(PersonageActions.EATING):
+				case instance.getActionInstance(PersonageActions.DRINKING):
+				case instance.getActionInstance(PersonageActions.SCARED):
+				case instance.getActionInstance(PersonageActions.GIGGLES):
+				case instance.getActionInstance(PersonageActions.WAVING):
+				case instance.getActionInstance(PersonageActions.LOOKS_ARROUND):
+				case instance.getActionInstance(PersonageActions.SCARED):
+					onActionComplete();
+					break;
+				case instance.getActionInstance(PersonageActions.DISSATISFIED):
+				case instance.getActionInstance(PersonageActions.PLEASURE):
+				case instance.getActionInstance(PersonageActions.JOY):
+					playActionBack();
+					break;
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function playActionBack():void {
+			trace("play action back started", currentAction);
+			currentAction.addFrameScript(currentAction.currentFrame - 1, null);
+			currentAction.addFrameScript(0, onActionBackToFirstFrame);
 			MovieClipUtil.stopAllMovieClips(currentAction);
+			MovieClipUtil.playClipBack(currentAction);
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function onActionBackToFirstFrame():void {
+			trace("action is back to last frame", currentAction);
+			onActionComplete();
+		}
+		
+		/**
+		 * 
+		 */
+		
+		private function onActionComplete():void {
+			dispatchEvent(new PersonageActionEvent(PersonageActionEvent.ACTION_COMPLETE));
+			showAction(PersonageActions.DEFAULT);
+			if (actionsQueue.length) {
+				trace("apply firs element in queue");
+				actionsQueue.applyFirst();
+			}
 		}
 		
 		/**

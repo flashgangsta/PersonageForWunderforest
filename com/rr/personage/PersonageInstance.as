@@ -1,4 +1,5 @@
 package com.rr.personage {
+	import com.flashgangsta.utils.MovieClipUtil;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.utils.Dictionary;
@@ -19,16 +20,16 @@ package com.rr.personage {
 			var className:String = "com.rr.personage.actions." + actionName;
 			var actionClass:Class;
 			
-			trace(className);
-			
 			actionClass = loaderInfo.applicationDomain.getDefinition(className) as Class;
 			
 			if (!actionInstancesListByActionClass[actionClass]) {
 				actionInstancesListByActionClass[actionClass] = new actionClass();
+				MovieClipUtil.stopAllMovieClips(MovieClip(actionInstancesListByActionClass[actionClass]));
 			}
 			
 			return actionInstancesListByActionClass[actionClass];
 		}
+		
 		
 	}
 
