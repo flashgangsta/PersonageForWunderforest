@@ -3,7 +3,7 @@ package com.flashgangsta.utils {
 	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
-	 * @version	0.03 23/10/2014
+	 * @version	0.04 03/11/2014
 	 */
 	
 	public class Queue {
@@ -62,6 +62,15 @@ package com.flashgangsta.utils {
 		
 		public function get length():int {
 			return methods.length;
+		}
+		
+		/**
+		 * 
+		 */
+		
+		public function dispose():void {
+			methods = null;
+			args = null;
 		}
 	
 	}

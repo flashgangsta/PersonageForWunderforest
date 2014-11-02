@@ -33,7 +33,7 @@ package com.rr.personage {
 		///Достает пистолет для вращения барабана
 		static public const TOOK_OUT_GUN_FOR_REVOLVE:String = "TookOutGunForRevolve";
 		///Достает пистолет для выстрела
-		static public const TOOK_OUT_GUN_FOR_SHOT:String = "TookOutGunForShot";
+		static public const TOOK_OUT_GUN_TO_TEMPLE:String = "TookOutGunToTemple";
 		///Машет рукой
 		static public const WAVING:String = "Waving";
 		///Стреляет, выстрел, выживает
@@ -70,6 +70,8 @@ package com.rr.personage {
 		static public const DRUNK:String = "Drunk";
 		///Воскресает
 		static public const RESURRECTED:String = "Resurrected";
+		///
+		static public const HIDE_GUN_FROM_TEMPLE:String = "HideGunFromTemple";
 	}
 
 }

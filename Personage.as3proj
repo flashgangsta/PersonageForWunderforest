@@ -6,7 +6,7 @@
     <movie input="" />
     <movie path="publish\Test.swf" />
     <movie fps="31" />
-    <movie width="1200" />
+    <movie width="1300" />
     <movie height="900" />
     <movie version="14" />
     <movie minorVersion="0" />

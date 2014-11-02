@@ -28,7 +28,7 @@ package com.rr.personage {
 				name: "Заяц",
 				nickname: "Вася",
 				sex: PersonageSex.MALE,
-				color: "0x9b5eff",
+				color: "0x999900",
 				drunkLevel: 3,
 				isPoisoned: true,
 				path: "rabbit.swf"
@@ -47,12 +47,21 @@ package com.rr.personage {
 			buttons[PersonageActions.DRINKING] = getButton(PersonageActions.DRINKING);
 			buttons[PersonageActions.DISSATISFIED] = getButton(PersonageActions.DISSATISFIED);
 			
+			buttons[PersonageActions.SHOOT_MISFIRE] = getButton(PersonageActions.SHOOT_MISFIRE);
+			buttons[PersonageActions.SHOOT_SHOOT_MISFIRE] = getButton(PersonageActions.SHOOT_SHOOT_MISFIRE);
+			buttons[PersonageActions.SHOOT_SHOOT_SHOOT_MISFIRE] = getButton(PersonageActions.SHOOT_SHOOT_SHOOT_MISFIRE);
+			buttons[PersonageActions.SHOOT_SHOT_SURVIVED] = getButton(PersonageActions.SHOOT_SHOT_SURVIVED);
+			buttons[PersonageActions.SHOOT_SHOOT_SHOT_SURVIVED] = getButton(PersonageActions.SHOOT_SHOOT_SHOT_SURVIVED);
+			buttons[PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_SURVIVED] = getButton(PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_SURVIVED);
+			
+			//buttons[PersonageActions.REVOLVING] = getButton(PersonageActions.REVOLVING);
+			
 			var i:int = 0;
-			const coloumns:int = 5;
+			const coloumns:int = 4;
 			
 			for each(var button:Sprite in buttons) {
-				button.x = 50 + (button.width + 10) * (i % coloumns);
-				button.y = 50 + (button.height + 10) * Math.floor(i / coloumns);
+				button.x = 35 + (button.width + 10) * (i % coloumns);
+				button.y = 35 + (button.height + 10) * Math.floor(i / coloumns);
 				button.addEventListener(MouseEvent.CLICK, onPoseSelected);
 				addChild(button);
 				i++;
@@ -95,7 +104,7 @@ package com.rr.personage {
 			//personageView.showAction(PersonageActions.SHOOT_SHOT_DEATH);
 			
 			personageView.x = stage.stageWidth / 2;
-			personageView.y = stage.stageHeight / 2;
+			personageView.y = stage.stageHeight / 2 + 210;
 			personageView.scaleX = personageView.scaleY = 2//4.5;
 			
 		}
@@ -134,12 +143,12 @@ package com.rr.personage {
 			var buttonBG:Shape = new Shape();
 			var textfield:TextField = new TextField();
 			var state:String = stateDefault;
-			var tfFormat:TextFormat = new TextFormat(null, 25);
+			var tfFormat:TextFormat = new TextFormat(null, 22);
 			
 			textfield.defaultTextFormat = tfFormat;
 			
 			buttonBG.graphics.beginFill(0xCCCCCC);
-			buttonBG.graphics.drawRect(0, 0, 200, 45);
+			buttonBG.graphics.drawRect(0, 0, 300, 45);
 			buttonBG.graphics.endFill();
 			textfield.text = label;
 			textfield.autoSize = TextFieldAutoSize.LEFT;

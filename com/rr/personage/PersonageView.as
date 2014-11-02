@@ -28,6 +28,7 @@ package com.rr.personage {
 		private var currentAction:MovieClip;
 		private var neededActionName:String;
 		private var actionsQueue:Queue = new Queue();
+		private var multipartActionQueue:Queue = new Queue();
 		
 		public function PersonageView(model:PersonageModel) {
 			super();
@@ -69,6 +70,11 @@ package com.rr.personage {
 				currentAction = null;
 			}
 			
+			if (!multipartActionQueue.length && checkAndInitMultipartAction(actionName)) {
+				multipartActionQueue.push(onActionComplete);
+				return;
+			}
+			
 			currentAction = instance.getActionInstance(actionName);
 			
 			trace("start new action", currentAction);
@@ -77,8 +83,34 @@ package com.rr.personage {
 				currentAction.addFrameScript(currentAction.totalFrames - 1, onActionLastFrame);
 			}
 			
-			MovieClipUtil.playAllMovieClips(currentAction, false, 1);
+			MovieClipUtil.playAllMovieClips(currentAction, false, 2);
 			addChild(currentAction);
+		}
+		
+		/**
+		 * 
+		 * @param	actionName
+		 */
+		
+		private function checkAndInitMultipartAction(actionName:String):Boolean {
+			if (multipartActionQueue.length) {
+				return false;
+			}
+			
+			switch(actionName) {
+				case PersonageActions.SHOOT_MISFIRE:
+				case PersonageActions.SHOOT_SHOOT_MISFIRE:
+				case PersonageActions.SHOOT_SHOOT_SHOOT_MISFIRE:
+				case PersonageActions.SHOOT_SHOT_SURVIVED:
+				case PersonageActions.SHOOT_SHOOT_SHOT_SURVIVED:
+				case PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_SURVIVED:
+					showAction(PersonageActions.TOOK_OUT_GUN_TO_TEMPLE);
+					multipartActionQueue.push(showAction, actionName);
+					multipartActionQueue.push(showAction, PersonageActions.HIDE_GUN_FROM_TEMPLE);
+					return true;
+				default :
+					return false;
+			}
 		}
 		
 		/**
@@ -98,11 +130,22 @@ package com.rr.personage {
 				case instance.getActionInstance(PersonageActions.WAVING):
 				case instance.getActionInstance(PersonageActions.LOOKS_ARROUND):
 				case instance.getActionInstance(PersonageActions.SCARED):
-					onActionComplete();
-					break;
-				case instance.getActionInstance(PersonageActions.DISSATISFIED):
 				case instance.getActionInstance(PersonageActions.PLEASURE):
 				case instance.getActionInstance(PersonageActions.JOY):
+				case instance.getActionInstance(PersonageActions.DISSATISFIED):
+					onActionComplete();
+					break;
+				case instance.getActionInstance(PersonageActions.TOOK_OUT_GUN_TO_TEMPLE):
+				case instance.getActionInstance(PersonageActions.HIDE_GUN_FROM_TEMPLE):
+				case instance.getActionInstance(PersonageActions.SHOOT_MISFIRE):
+				case instance.getActionInstance(PersonageActions.SHOOT_SHOOT_MISFIRE):
+				case instance.getActionInstance(PersonageActions.SHOOT_SHOOT_SHOOT_MISFIRE):
+				case instance.getActionInstance(PersonageActions.SHOOT_SHOT_SURVIVED):
+				case instance.getActionInstance(PersonageActions.SHOOT_SHOOT_SHOT_SURVIVED):
+				case instance.getActionInstance(PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_SURVIVED):
+					onMultipartActionPartComplete();
+					break;
+				default:
 					playActionBack();
 					break;
 			}
@@ -135,12 +178,30 @@ package com.rr.personage {
 		
 		private function onActionComplete():void {
 			dispatchEvent(new PersonageActionEvent(PersonageActionEvent.ACTION_COMPLETE));
+			if (multipartActionQueue.length) {
+				multipartActionQueue.dispose();
+			}
 			showAction(PersonageActions.DEFAULT);
 			if (actionsQueue.length) {
 				trace("apply firs element in queue");
 				actionsQueue.applyFirst();
 			}
 		}
+		
+		/**
+		 * 
+		 */
+		
+		private function onMultipartActionPartComplete():void {
+			MovieClipUtil.stopAllMovieClips(currentAction);
+			showAction(PersonageActions.DEFAULT);
+			if(multipartActionQueue.length) {
+				multipartActionQueue.applyFirst();
+			} else {
+				multipartActionQueue.dispose();
+			}
+		}
+
 		
 		/**
 		 * 
