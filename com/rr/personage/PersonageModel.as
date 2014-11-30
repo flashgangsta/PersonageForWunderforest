@@ -95,12 +95,12 @@ package com.rr.personage {
 		}
 		
 		private function onPersonageDied(event:PersonageActionEvent):void {
-			trace("Personage is died");
+			Test.log("Personage is died");
 			_isDead = true;
 		}
 		
 		private function onPersonageResurrected(event:PersonageActionEvent):void {
-			trace("Personage is resurrected");
+			Test.log("Personage is resurrected");
 			_isDead = false;
 		}
 		

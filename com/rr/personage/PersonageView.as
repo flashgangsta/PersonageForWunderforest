@@ -39,10 +39,10 @@ package com.rr.personage {
 			super();
 			this.model = model;
 			
-			trace("<-------------------------");
-			trace("poison:", model.alco);
-			trace("poison:", model.poison);
-			trace(">-------------------------");
+			Test.log("<-------------------------");
+			Test.log("poison:", model.alco);
+			Test.log("poison:", model.poison);
+			Test.log(">-------------------------");
 			
 			basicColorPartColorTransform.color = model.color;
 			brightColorPartColorTransform.color = model.brightColor;
@@ -63,18 +63,21 @@ package com.rr.personage {
 			}
 			
 			if (model.isDead && actionName !== PersonageActions.RESURRECTED) {
-				trace("Personage dead. For playing this action, you must start action 'RESURRECTED'");
+				Test.log("Personage dead. For playing this action, personage must be resurrected.");
+				return;
+			} else if (!model.isDead && actionName === PersonageActions.RESURRECTED) {
+				Test.log("Personage has not dead. For playing this action, personage must be dead");
 				return;
 			}
 			
 			if (currentAction) {
 				if (currentAction !== instance.getActionInstance(PersonageActions.DEFAULT) && actionName !== PersonageActions.DEFAULT && actionName !== PersonageActions.RESURRECTED) {
-					trace("add action to queue and break", currentAction);
+					Test.log("add action to queue and break", currentAction);
 					actionsQueue.push(showAction, actionName);
 					return;
 				}
 				
-				trace("remove action", currentAction);
+				Test.log("remove action", currentAction);
 				
 				currentAction.addFrameScript(0, null);
 				currentAction.addFrameScript(currentAction.totalFrames - 1, null);
@@ -90,7 +93,7 @@ package com.rr.personage {
 			
 			currentAction = instance.getActionInstance(actionName);
 			
-			trace("start new action", currentAction);
+			Test.log("start new action", currentAction);
 			
 			if(actionName !== PersonageActions.DEFAULT) {
 				currentAction.addFrameScript(currentAction.totalFrames - 1, onActionLastFrame);
@@ -142,7 +145,7 @@ package com.rr.personage {
 		 */
 		
 		private function onActionLastFrame():void {
-			trace("last frame of action", currentAction);
+			Test.log("last frame of action", currentAction);
 			
 			switch(currentAction) {
 				case instance.getActionInstance(PersonageActions.STROKING_BELLY):
@@ -195,7 +198,7 @@ package com.rr.personage {
 		 */
 		
 		private function playActionBack():void {
-			trace("play action back started", currentAction);
+			Test.log("play action back started", currentAction);
 			currentAction.addFrameScript(currentAction.currentFrame - 1, null);
 			currentAction.addFrameScript(0, onActionBackToFirstFrame);
 			MovieClipUtil.stopAllMovieClips(currentAction);
@@ -207,7 +210,7 @@ package com.rr.personage {
 		 */
 		
 		private function onActionBackToFirstFrame():void {
-			trace("action is back to first frame", currentAction);
+			Test.log("action is back to first frame", currentAction);
 			if (multipartActionQueue.length) {
 				multipartActionQueue.dispose();
 			}
@@ -225,7 +228,7 @@ package com.rr.personage {
 			}
 			showAction(PersonageActions.DEFAULT);
 			if (actionsQueue.length) {
-				trace("apply firs element in actionsQueue");
+				Test.log("apply firs element in actionsQueue");
 				actionsQueue.applyFirst();
 			}
 		}
@@ -295,10 +298,10 @@ package com.rr.personage {
 		 */
 		
 		private function onGenderPartInit(event:DynamicPartEvent):void {
-			//event.part.visible = model.sex === PersonageSex.FEMALE;
-			const ct:ColorTransform = new ColorTransform();
+			event.part.visible = model.sex === PersonageSex.FEMALE;
+			/*const ct:ColorTransform = new ColorTransform();
 			ct.color = 0x00FF00;
-			event.part.transform.colorTransform = ct;
+			event.part.transform.colorTransform = ct;*/
 		}
 		
 		/**

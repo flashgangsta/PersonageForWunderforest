@@ -20,9 +20,14 @@ package com.rr.personage {
 		private var buttons:Dictionary = new Dictionary();
 		private var personageView:PersonageView;
 		private var currentButton:Sprite;
+		static private var msgField:TextField;
 		
 		public function Test() {
 			super();
+			
+			msgField = new TextField();
+			msgField.autoSize = TextFieldAutoSize.LEFT;
+			addChild(msgField);
 			
 			var modelObj:Object = {
 				name: "Заяц",
@@ -86,6 +91,20 @@ package com.rr.personage {
 			personageView.scaleX = personageView.scaleY = 2//4.5;
 			
 		}
+		
+		static public function log(...rest):void {
+			var msg:String = "";
+			for (var i:int = 0; i < rest.length; i++) {
+				msg += rest[i].toString() + " ";
+			}
+			trace(msg);
+			msgField.text = msg;
+		}
+		
+		/**
+		 * 
+		 * @param	event
+		 */
 		
 		private function onPoseSelected(event:MouseEvent):void {
 			var button:Sprite = event.target as Sprite;
