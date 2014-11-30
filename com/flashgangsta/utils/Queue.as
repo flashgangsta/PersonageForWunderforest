@@ -3,7 +3,7 @@ package com.flashgangsta.utils {
 	/**
 	 * ...
 	 * @author Sergey Krivtsov (flashgangsta@gmail.com)
-	 * @version	0.04 03/11/2014
+	 * @version	0.05 2014/11/30
 	 */
 	
 	public class Queue {
@@ -69,8 +69,8 @@ package com.flashgangsta.utils {
 		 */
 		
 		public function dispose():void {
-			methods = null;
-			args = null;
+			methods = [];
+			args = [];
 		}
 	
 	}

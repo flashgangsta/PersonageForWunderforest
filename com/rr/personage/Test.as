@@ -29,8 +29,9 @@ package com.rr.personage {
 				nickname: "Вася",
 				sex: PersonageSex.MALE,
 				color: "0x999900",
-				drunkLevel: 3,
-				isPoisoned: true,
+				hp: 100,
+				alco: 3,
+				poison: true,
 				path: "rabbit.swf"
 				
 			}
@@ -46,6 +47,10 @@ package com.rr.personage {
 			buttons[PersonageActions.EATING] = getButton(PersonageActions.EATING);
 			buttons[PersonageActions.DRINKING] = getButton(PersonageActions.DRINKING);
 			buttons[PersonageActions.DISSATISFIED] = getButton(PersonageActions.DISSATISFIED);
+			buttons[PersonageActions.POISONED] = getButton(PersonageActions.POISONED);
+			buttons[PersonageActions.POISONED_DEATH] = getButton(PersonageActions.POISONED_DEATH);
+			
+			buttons[PersonageActions.REVOLVING] = getButton(PersonageActions.REVOLVING);
 			
 			buttons[PersonageActions.SHOOT_MISFIRE] = getButton(PersonageActions.SHOOT_MISFIRE);
 			buttons[PersonageActions.SHOOT_SHOOT_MISFIRE] = getButton(PersonageActions.SHOOT_SHOOT_MISFIRE);
@@ -53,7 +58,12 @@ package com.rr.personage {
 			buttons[PersonageActions.SHOOT_SHOT_SURVIVED] = getButton(PersonageActions.SHOOT_SHOT_SURVIVED);
 			buttons[PersonageActions.SHOOT_SHOOT_SHOT_SURVIVED] = getButton(PersonageActions.SHOOT_SHOOT_SHOT_SURVIVED);
 			buttons[PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_SURVIVED] = getButton(PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_SURVIVED);
+			buttons[PersonageActions.SHOOT_SHOT_DEATH] = getButton(PersonageActions.SHOOT_SHOT_DEATH);
+			buttons[PersonageActions.SHOOT_SHOOT_SHOT_DEATH] = getButton(PersonageActions.SHOOT_SHOOT_SHOT_DEATH);
+			buttons[PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_DEATH] = getButton(PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_DEATH);
+			buttons[PersonageActions.CARDIAC_ARREST] = getButton(PersonageActions.CARDIAC_ARREST);
 			
+			buttons[PersonageActions.RESURRECTED] = getButton(PersonageActions.RESURRECTED);
 			//buttons[PersonageActions.REVOLVING] = getButton(PersonageActions.REVOLVING);
 			
 			var i:int = 0;
@@ -70,38 +80,6 @@ package com.rr.personage {
 			var personageModel:PersonageModel = new PersonageModel(modelObj);
 			personageView = new PersonageView(personageModel);
 			addChild(personageView);
-			
-			//personageView.showAction(PersonageActions.RESURRECTED);
-			//personageView.showAction(PersonageActions.DRUNK);
-			//personageView.showAction(PersonageActions.DRINKING);
-			//personageView.showAction(PersonageActions.STROKING_BELLY);
-			//personageView.showAction(PersonageActions.EATING);
-			//personageView.showAction(PersonageActions.CONTUSED_BY_BOMB_DEATH);
-			//personageView.showAction(PersonageActions.CONTUSED_BY_BOMB);
-			//personageView.showAction(PersonageActions.POISONED_DEATH);
-			//personageView.showAction(PersonageActions.POISONED);
-			//personageView.showAction(PersonageActions.SHAKING);
-			//personageView.showAction(PersonageActions.SCARED);
-			//personageView.showAction(PersonageActions.LOOKS_ARROUND);
-			//personageView.showAction(PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_DEATH);
-			//personageView.showAction(PersonageActions.SHOOT_SHOOT_SHOT_DEATH);
-			//personageView.showAction(PersonageActions.DISSATISFIED);
-			//personageView.showAction(PersonageActions.GIGGLES);
-			//personageView.showAction(PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_SURVIVED);
-			//personageView.showAction(PersonageActions.SHOOT_SHOOT_SHOT_SURVIVED);
-			//personageView.showAction(PersonageActions.SHOOT_SHOT_SURVIVED);
-			//personageView.showAction(PersonageActions.CONTUSED);
-			//personageView.showAction(PersonageActions.REVOLVING);
-			//personageView.showAction(PersonageActions.JOY);
-			//personageView.showAction(PersonageActions.PLEASURE);
-			//personageView.showAction(PersonageActions.CARDIAC_ARREST);
-			//personageView.showAction(PersonageActions.SHOOT_SHOOT_SHOOT_MISFIRE);
-			//personageView.showAction(PersonageActions.SHOOT_SHOOT_MISFIRE);
-			//personageView.showAction(PersonageActions.SHOOT_MISFIRE);
-			//personageView.showAction(PersonageActions.TOOK_OUT_GUN_FOR_REVOLVE);
-			//personageView.showAction(PersonageActions.TOOK_OUT_GUN_FOR_SHOT);
-			//personageView.showAction(PersonageActions.WAVING);
-			//personageView.showAction(PersonageActions.SHOOT_SHOT_DEATH);
 			
 			personageView.x = stage.stageWidth / 2;
 			personageView.y = stage.stageHeight / 2 + 210;

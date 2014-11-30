@@ -6,8 +6,6 @@ package com.rr.personage {
 	public class PersonageActions {
 		
 		
-		///Контужен (оглушен)
-		static public const CONTUSED:String = "Contused";
 		///Крутит барабан
 		static public const REVOLVING:String = "Revolving";
 		/// Радость
@@ -31,7 +29,7 @@ package com.rr.personage {
 		///Стреляет, стреляет, стреляет, осечка
 		static public const SHOOT_SHOOT_SHOOT_MISFIRE:String = "ShootShootShootMisfire";
 		///Достает пистолет для вращения барабана
-		static public const TOOK_OUT_GUN_FOR_REVOLVE:String = "TookOutGunForRevolve";
+		static public const TOOK_OUT_GUN:String = "TookOutGun";
 		///Достает пистолет для выстрела
 		static public const TOOK_OUT_GUN_TO_TEMPLE:String = "TookOutGunToTemple";
 		///Машет рукой
@@ -56,6 +54,8 @@ package com.rr.personage {
 		static public const POISONED:String = "Poisoned";
 		///Отравлен, умирает
 		static public const POISONED_DEATH:String = "PoisonedDeath";
+		///Контужен (оглушен)
+		static public const CONTUSED:String = "Contused";
 		///Контужен бомбой
 		static public const CONTUSED_BY_BOMB:String = "ContusedByBomb";
 		///Контужен бомбой, умирает
@@ -70,8 +70,10 @@ package com.rr.personage {
 		static public const DRUNK:String = "Drunk";
 		///Воскресает
 		static public const RESURRECTED:String = "Resurrected";
-		///
+		///Прячет пистолет от виска
 		static public const HIDE_GUN_FROM_TEMPLE:String = "HideGunFromTemple";
+		///Прячет пистолет
+		static public const HIDE_GUN:String = "HideGun";
 	}
 
 }

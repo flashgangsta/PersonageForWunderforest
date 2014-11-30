@@ -30,11 +30,19 @@ package com.rr.personage {
 		private var actionsQueue:Queue = new Queue();
 		private var multipartActionQueue:Queue = new Queue();
 		
+		/**
+		 * 
+		 * @param	model
+		 */
+		
 		public function PersonageView(model:PersonageModel) {
 			super();
 			this.model = model;
 			
-			trace("drunk:", model.drunkLevel);
+			trace("<-------------------------");
+			trace("poison:", model.alco);
+			trace("poison:", model.poison);
+			trace(">-------------------------");
 			
 			basicColorPartColorTransform.color = model.color;
 			brightColorPartColorTransform.color = model.brightColor;
@@ -54,8 +62,13 @@ package com.rr.personage {
 				return;
 			}
 			
+			if (model.isDead && actionName !== PersonageActions.RESURRECTED) {
+				trace("Personage dead. For playing this action, you must start action 'RESURRECTED'");
+				return;
+			}
+			
 			if (currentAction) {
-				if (currentAction !== instance.getActionInstance(PersonageActions.DEFAULT) && actionName !== PersonageActions.DEFAULT) {
+				if (currentAction !== instance.getActionInstance(PersonageActions.DEFAULT) && actionName !== PersonageActions.DEFAULT && actionName !== PersonageActions.RESURRECTED) {
 					trace("add action to queue and break", currentAction);
 					actionsQueue.push(showAction, actionName);
 					return;
@@ -108,6 +121,17 @@ package com.rr.personage {
 					multipartActionQueue.push(showAction, actionName);
 					multipartActionQueue.push(showAction, PersonageActions.HIDE_GUN_FROM_TEMPLE);
 					return true;
+				case PersonageActions.REVOLVING:
+					showAction(PersonageActions.TOOK_OUT_GUN);
+					multipartActionQueue.push(showAction, actionName);
+					multipartActionQueue.push(showAction, PersonageActions.HIDE_GUN);
+					return true;
+				case PersonageActions.SHOOT_SHOT_DEATH:
+				case PersonageActions.SHOOT_SHOOT_SHOT_DEATH:
+				case PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_DEATH:
+					showAction(PersonageActions.TOOK_OUT_GUN_TO_TEMPLE);
+					multipartActionQueue.push(showAction, actionName);
+					return true;
 				default :
 					return false;
 			}
@@ -133,6 +157,11 @@ package com.rr.personage {
 				case instance.getActionInstance(PersonageActions.PLEASURE):
 				case instance.getActionInstance(PersonageActions.JOY):
 				case instance.getActionInstance(PersonageActions.DISSATISFIED):
+				case instance.getActionInstance(PersonageActions.POISONED):
+					onActionComplete();
+					break;
+				case instance.getActionInstance(PersonageActions.RESURRECTED):
+					model.dispatchEvent(new PersonageActionEvent(PersonageActionEvent.PERSONAGE_RESURRECTED));
 					onActionComplete();
 					break;
 				case instance.getActionInstance(PersonageActions.TOOK_OUT_GUN_TO_TEMPLE):
@@ -143,7 +172,17 @@ package com.rr.personage {
 				case instance.getActionInstance(PersonageActions.SHOOT_SHOT_SURVIVED):
 				case instance.getActionInstance(PersonageActions.SHOOT_SHOOT_SHOT_SURVIVED):
 				case instance.getActionInstance(PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_SURVIVED):
+				case instance.getActionInstance(PersonageActions.REVOLVING):
+				case instance.getActionInstance(PersonageActions.TOOK_OUT_GUN):
+				case instance.getActionInstance(PersonageActions.HIDE_GUN):
 					onMultipartActionPartComplete();
+					break;
+				case instance.getActionInstance(PersonageActions.SHOOT_SHOT_DEATH):
+				case instance.getActionInstance(PersonageActions.SHOOT_SHOOT_SHOT_DEATH):
+				case instance.getActionInstance(PersonageActions.SHOOT_SHOOT_SHOOT_SHOT_DEATH):
+				case instance.getActionInstance(PersonageActions.CARDIAC_ARREST):
+				case instance.getActionInstance(PersonageActions.POISONED_DEATH):
+					onActionDeathComplete();
 					break;
 				default:
 					playActionBack();
@@ -168,7 +207,10 @@ package com.rr.personage {
 		 */
 		
 		private function onActionBackToFirstFrame():void {
-			trace("action is back to last frame", currentAction);
+			trace("action is back to first frame", currentAction);
+			if (multipartActionQueue.length) {
+				multipartActionQueue.dispose();
+			}
 			onActionComplete();
 		}
 		
@@ -183,7 +225,7 @@ package com.rr.personage {
 			}
 			showAction(PersonageActions.DEFAULT);
 			if (actionsQueue.length) {
-				trace("apply firs element in queue");
+				trace("apply firs element in actionsQueue");
 				actionsQueue.applyFirst();
 			}
 		}
@@ -201,7 +243,19 @@ package com.rr.personage {
 				multipartActionQueue.dispose();
 			}
 		}
-
+		
+		/**
+		 * 
+		 */
+		
+		private function onActionDeathComplete():void {
+			currentAction.stop();
+			if (multipartActionQueue.length) {
+				multipartActionQueue.dispose();
+			}
+			model.dispatchEvent(new PersonageActionEvent(PersonageActionEvent.PERSONAGE_DIED));
+			dispatchEvent(new PersonageActionEvent(PersonageActionEvent.ACTION_COMPLETE));
+		}
 		
 		/**
 		 * 
@@ -280,7 +334,7 @@ package com.rr.personage {
 		 */
 		
 		private function onDrunkEasyPartInit(event:DynamicPartEvent):void {
-			event.part.visible = model.drunkLevel === 1;
+			event.part.visible = model.alco === 1;
 		}
 		
 		/**
@@ -289,7 +343,7 @@ package com.rr.personage {
 		 */
 		
 		private function onDrunkMediumPartInit(event:DynamicPartEvent):void {
-			event.part.visible = model.drunkLevel === 2;
+			event.part.visible = model.alco === 2;
 		}
 		
 		/**
@@ -298,7 +352,7 @@ package com.rr.personage {
 		 */
 		
 		private function onDrunkHardPartInit(event:DynamicPartEvent):void {
-			event.part.visible = model.drunkLevel === 3;
+			event.part.visible = model.alco === 3;
 		}
 		
 		/**
@@ -307,7 +361,7 @@ package com.rr.personage {
 		 */
 		
 		private function poisonedPartInit(event:DynamicPartEvent):void {
-			event.part.visible = model.isPoisoned;
+			event.part.visible = Boolean(model.poison);
 		}
 		
 	}
